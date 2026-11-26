@@ -62,10 +62,12 @@ async function open_(pw){try{
   for(const old of page.querySelectorAll('script')){const sc=document.createElement('script');sc.textContent=old.textContent;old.replaceWith(sc)}
   try{sessionStorage.setItem('k',pw)}catch(e){}
 }catch(e){document.getElementById('msg').innerHTML='ひらけませんでした。<br>お送りしたリンクを、そのままタップしてください。'}}
-(function(){const m=location.hash.match(/[#&]k=([A-Za-z0-9]+)/);
-  if(m){history.replaceState(null,'',location.pathname+location.search);open_(m[1]);return}
+function start(){const m=location.hash.match(/[#&]k=([A-Za-z0-9]+)/);
+  if(m){history.replaceState(null,'',location.pathname+location.search);if(document.getElementById('gate'))open_(m[1]);else{try{sessionStorage.setItem('k',m[1])}catch(e){}}return}
+  if(!document.getElementById('gate'))return;
   let k=null;try{k=sessionStorage.getItem('k')}catch(e){}
-  if(k)open_(k);else document.getElementById('msg').innerHTML='お送りしたリンクを、<br>そのままタップしてください。';})();
+  if(k)open_(k);else document.getElementById('msg').innerHTML='お送りしたリンクを、<br>そのままタップしてください。';}
+start();addEventListener('hashchange',start);addEventListener('pageshow',e=>{if(e.persisted)start()});
 </script>
 </body>
 </html>
